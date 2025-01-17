@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h2>Login</h2>
+    <form id="loginForm">
+        <input type="text" id="username" name="username" placeholder="Username" required><br>
+        <input type="password" id="password" name="password" placeholder="Password" required><br>
+        <button type="button" onclick="login()">Login</button>
+    </form>
+    <p id="message"></p>
+
+    <script>
+        function login() {
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+
+            $.ajax({
+                url: '/login',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({username: username, password: password}),
+                success: function(response) {
+                    document.getElementById('message').innerText = response.message;
+                    localStorage.setItem('access_token', response.access_token);
+                    window.location.href = '/';
+                },
+                error: function(xhr, status, error) {
+                    document.getElementById('message').innerText = 'Login failed: ' + xhr.responseText;
+                }
+            });
+        }
+    </script>
+</body>
+</html>

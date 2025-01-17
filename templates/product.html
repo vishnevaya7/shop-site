@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../static/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+<header>
+    <div class="shop__info">
+        <svg class="shop__info_image" width="50px" height="50px" viewBox="0 0 16 16" fill="none"
+             xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 1L0 4V5C0 5 2 6 4 6C6 6 8 5 8 5C8 5 10 6 12 6C14 6 16 5 16 5V4L13 1H3Z" fill="#000000"/>
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M1 15V7.5187C1.81671 7.76457 2.88168 8 4 8C5.3025 8 6.53263 7.68064 7.38246 7.39737C7.60924 7.32177 7.81664 7.24612 8 7.17526C8.18337 7.24612 8.39076 7.32177 8.61754 7.39737C9.46737 7.68064 10.6975 8 12 8C13.1183 8 14.1833 7.76457 15 7.5187V15H7V10H4V15H1ZM12 10H10V13H12V10Z"
+                  fill="#000000"/>
+        </svg>
+        <h1 class="shop__info-name">Название магазина</h1>
+    </div>
+    <div>
+        <button class="login" style="display: none">Войти</button>
+        <button class="basket">Корзина</button>
+        <button class="logout">Выход</button>
+    </div>
+</header>
+<section class="product_section">
+    {#      id product name price quantity url group_name  #}
+    <img class="product_image" src="{{ product.get('url') }}" alt="{{ product.get('product_name') }}">
+    <div class="buy_info">
+        <h2 class="product_name">{{ product.get('product_name') }}</h2>
+        <p class="product_price"> Цена {{ product.get('price') }} рублей</p>
+        <button>Добавить в корзину</button>
+        <button onclick="decreaseQuantity()">-</button>
+        <input type="number" value="1" min="1" max="{{ product.get('quantity') }}">
+        <button onclick="increaseQuantity()">+</button>
+        <p class="item-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, aperiam at atque
+            cum cupiditate dolor dolorum ducimus expedita ipsam iusto magni nam omnis quis repellendus, saepe sint sunt!
+            Accusamus ducimus hic id illum iusto mollitia praesentium quae qui repudiandae tenetur, voluptas,
+            voluptatum. Animi aut beatae consectetur cupiditate, dicta distinctio eius eos et fuga, harum in iusto
+            minima nam omnis quas qui rerum saepe totam veniam voluptatibus. Assumenda distinctio dolor, eum facilis hic
+            impedit incidunt inventore ipsa iusto magnam porro praesentium, similique ut! Eum fugiat iste nulla
+            provident voluptatibus? Consequatur ipsam laborum veniam? Deleniti dolorem illum non omnis temporibus! Animi
+            eos qui tempora ut? Accusantium assumenda at cupiditate dolor eaque ex expedita facilis id, in inventore
+            iure maiores molestiae nulla perspiciatis praesentium quasi qui, quibusdam reiciendis rem repudiandae rerum
+            tenetur veniam voluptatibus. Dolor ex ipsam laudantium minima modi molestiae non nostrum officiis omnis
+            possimus quo, repellat saepe suscipit tempora voluptatem voluptatibus?</p>
+    </div>
+</section>
+<script>
+    let min = 1
+    let max = {{ product.get('quantity') }}
+    function increaseQuantity() {
+        let value = document.querySelector("body > section > div > input[type=number]").value
+        if(value == max) return;
+        document.querySelector("body > section > div > input[type=number]").value = parseInt(value) + 1
+    }
+    function decreaseQuantity() {
+        let value = document.querySelector("body > section > div > input[type=number]").value
+        if(value == min) return;
+        document.querySelector("body > section > div > input[type=number]").value = parseInt(value) - 1
+    }
+    document.querySelector(".shop__info").addEventListener('click',()=>{
+        window.location.href = '/'
+    })
+
+</script>
+</body>
+
+</html>
