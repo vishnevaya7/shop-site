@@ -11,7 +11,13 @@
 
 <body>
 <script>
-    localStorage.setItem('group_id', {{ group_id }});
+    group_id = '{{ group_id }}'
+    if(group_id == 'None') {
+        group_id = null
+    } else {
+        group_id = parseInt(group_id)
+    }
+    localStorage.setItem('group_id', group_id);
 </script>
     <header>
         <div class="shop__info">
@@ -26,13 +32,14 @@
         </div>
         <div>
             <button class="login" style="display: none">Войти</button>
-            <button class="basket">Корзина</button>
+{#            <button class="basket">Корзина</button>#}
             <button class="logout">Выход</button>
         </div>
     </header>
     <main>
         <nav class="menu">
             <ul class="menu__list">
+                <li class="menu_list__element"><a href="/">Все</a></li>
                 {% for group in groups %}
                     <li class="menu_list__element"><a href="/?group_id={{ group.get('id') }}">{{ group.get('group_name') }}</a></li>
                 {% endfor %}

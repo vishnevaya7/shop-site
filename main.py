@@ -51,7 +51,7 @@ def logout():
 @app.route('/api/products', methods=['GET'])
 def get_products():
     try:
-        group_id = request.args['group_id']
+        group_id = int(request.args['group_id'])
     except:
         group_id = None
     return shop.get_all_products(group_id)
@@ -62,7 +62,7 @@ def index():
     # get_jwt_identity()
     groups = shop.get_all_groups()
     try:
-        group_id = request.args['group_id']
+        group_id = int(request.args['group_id'])
     except:
         group_id = None
     print(group_id)
@@ -113,5 +113,5 @@ def update_product(id):
 
 if __name__ == '__main__':
     # create_database()
-    app.run()
+    app.run(host="0.0.0.0", port=80, debug=True)
     shop.close()
