@@ -53,19 +53,26 @@ class Store:
         self.conn.commit()
 
     def get_product(self, product_id):
-        self.cursor.execute('''SELECT p.id, product_name, price, quantity,i.url, g.group_name
+        self.cursor.execute('''SELECT p.id, product_name, price, quantity,i.url, g.group_name, d.description
                                    FROM products p
                                    left join product_image i on p.id = i.product_id
                                    left join product_group g on  p.group_id=g.id
-                                   where product_id = ?''', (product_id,))
-        return self.cursor.fetchone()
+                                   left join product_description d on p.id = d.product_id
+                                   where p.id = ?''', (product_id,))
+        product = self.cursor.fetchone()
+        product_properties = self.cursor.execute('select property, value from product_property where product_id = ?', (product_id,))
+        product['properties'] = product_properties.fetchall()
+        return product
 
-    def get_all_products(self):
-        self.cursor.execute('''
+    def get_all_products(self,group_id=None):
+        sql_query= '''
         SELECT products.id,products.product_name as name,products.price, product_group.group_name, product_image.url from products
-        left join product_group on  products.group_id=product_group.id
+        inner join product_group on  products.group_id=product_group.id
         left join product_image
-        on products.id = product_image.product_id and is_main=true''')
+        on products.id = product_image.product_id and is_main=true'''
+        if group_id:
+            sql_query += f' where products.group_id={group_id}'
+        self.cursor.execute(sql_query)
         return self.cursor.fetchall()
 
     def update_product(self, product_id, name=None, price=None, quantity=None):
@@ -83,6 +90,9 @@ class Store:
 
     def close(self):
         self.conn.close()
+    def get_all_groups(self):
+        self.cursor.execute('select * from product_group')
+        return self.cursor.fetchall()
 
 
 if __name__ == '__main__':

@@ -29,7 +29,18 @@
 </header>
 <section class="product_section">
     {#      id product name price quantity url group_name  #}
-    <img class="product_image" src="{{ product.get('url') }}" alt="{{ product.get('product_name') }}">
+    <div class="left_side">
+        <img class="product_image" src="{{ product.get('url') }}" alt="{{ product.get('product_name') }}">
+        <table class="product_properties">
+            {% for el in product.get('properties') %}
+                <tr>
+                    <td>{{ el.get('property') }}</td>
+                    <td>{{ el.get('value') }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
     <div class="buy_info">
         <h2 class="product_name">{{ product.get('product_name') }}</h2>
         <p class="product_price"> Цена {{ product.get('price') }} рублей</p>
@@ -37,33 +48,30 @@
         <button onclick="decreaseQuantity()">-</button>
         <input type="number" value="1" min="1" max="{{ product.get('quantity') }}">
         <button onclick="increaseQuantity()">+</button>
-        <p class="item-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, aperiam at atque
-            cum cupiditate dolor dolorum ducimus expedita ipsam iusto magni nam omnis quis repellendus, saepe sint sunt!
-            Accusamus ducimus hic id illum iusto mollitia praesentium quae qui repudiandae tenetur, voluptas,
-            voluptatum. Animi aut beatae consectetur cupiditate, dicta distinctio eius eos et fuga, harum in iusto
-            minima nam omnis quas qui rerum saepe totam veniam voluptatibus. Assumenda distinctio dolor, eum facilis hic
-            impedit incidunt inventore ipsa iusto magnam porro praesentium, similique ut! Eum fugiat iste nulla
-            provident voluptatibus? Consequatur ipsam laborum veniam? Deleniti dolorem illum non omnis temporibus! Animi
-            eos qui tempora ut? Accusantium assumenda at cupiditate dolor eaque ex expedita facilis id, in inventore
-            iure maiores molestiae nulla perspiciatis praesentium quasi qui, quibusdam reiciendis rem repudiandae rerum
-            tenetur veniam voluptatibus. Dolor ex ipsam laudantium minima modi molestiae non nostrum officiis omnis
-            possimus quo, repellat saepe suscipit tempora voluptatem voluptatibus?</p>
+        {% for el in product.get('description') %}
+            <p class="item-description">{{ el }}</p>
+        {% endfor %}
+
+
     </div>
 </section>
 <script>
     let min = 1
     let max = {{ product.get('quantity') }}
+
     function increaseQuantity() {
         let value = document.querySelector("body > section > div > input[type=number]").value
-        if(value == max) return;
+        if (value == max) return;
         document.querySelector("body > section > div > input[type=number]").value = parseInt(value) + 1
     }
+
     function decreaseQuantity() {
         let value = document.querySelector("body > section > div > input[type=number]").value
-        if(value == min) return;
+        if (value == min) return;
         document.querySelector("body > section > div > input[type=number]").value = parseInt(value) - 1
     }
-    document.querySelector(".shop__info").addEventListener('click',()=>{
+
+    document.querySelector(".shop__info").addEventListener('click', () => {
         window.location.href = '/'
     })
 

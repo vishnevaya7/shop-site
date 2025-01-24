@@ -4,12 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project</title>
+    <title>Название магазина</title>
     <link rel="stylesheet" href="../static/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 
 <body>
+<script>
+    localStorage.setItem('group_id', {{ group_id }});
+</script>
     <header>
         <div class="shop__info">
             <svg class="shop__info_image" width="50px" height="50px" viewBox="0 0 16 16" fill="none"
@@ -30,11 +33,9 @@
     <main>
         <nav class="menu">
             <ul class="menu__list">
-                <li class="menu_list__element"><a href="#">Раздел 1</a></li>
-                <li class="menu_list__element"><a href="#">Раздел 2</a></li>
-                <li class="menu_list__element"><a href="#">Раздел 3</a></li>
-                <li class="menu_list__element"><a href="#">Раздел 4</a></li>
-                <li class="menu_list__element"><a href="#">Раздел 5</a></li>
+                {% for group in groups %}
+                    <li class="menu_list__element"><a href="/?group_id={{ group.get('id') }}">{{ group.get('group_name') }}</a></li>
+                {% endfor %}
             </ul>
         </nav>
         <section class="main_section">

@@ -15,7 +15,7 @@ $(document).ready(function () {
 
 $.ajaxSetup({async: false});
 $.ajax({
-    url: '/api/products',
+    url: '/api/products?group_id=' + localStorage.getItem('group_id'),
     method: 'get',
     dataType: 'json',
     success: function (data) {

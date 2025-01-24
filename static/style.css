@@ -43,6 +43,9 @@ body, ul {
     overflow: hidden;
     object-fit: cover;
 }
+.card img {
+    object-fit: cover;
+}
 
 
 .card__row{
@@ -68,8 +71,11 @@ body, ul {
     gap: 20px;
 }
 .product_image{
-    width: 50%;
+    width: 100%;
     height: fit-content;
+}
+.left_side{
+    width: 50%;
 }
 .product_name{
     font-size: 45px;
@@ -82,4 +88,9 @@ body, ul {
 }
 .shop__info:hover {
     cursor: pointer;
+}
+.product_properties{
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 100%;
 }

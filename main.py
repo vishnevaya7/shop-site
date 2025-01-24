@@ -50,13 +50,23 @@ def logout():
 
 @app.route('/api/products', methods=['GET'])
 def get_products():
-    return shop.get_all_products()
+    try:
+        group_id = request.args['group_id']
+    except:
+        group_id = None
+    return shop.get_all_products(group_id)
 
 @app.route('/', methods=['GET'])
 @jwt_required()
 def index():
     # get_jwt_identity()
-    return render_template('index.html')
+    groups = shop.get_all_groups()
+    try:
+        group_id = request.args['group_id']
+    except:
+        group_id = None
+    print(group_id)
+    return render_template('index.html',groups=groups,group_id=group_id)
 
 @jwt.unauthorized_loader
 def unauthorized_callback(callback):
@@ -69,6 +79,11 @@ def expired_token_callback(jwt_header, jwt_data):
 @app.route('/product/<id>', methods=['GET'])
 def product(id):
     product = shop.get_product(id)
+    if product.get('description') is not None:
+        product['description'] = product.get('description').split('\n')
+    else:
+        product['description'] = []
+    print(product)
     return render_template('product.html',product=product)
 
 
@@ -97,6 +112,6 @@ def update_product(id):
     return "true"
 
 if __name__ == '__main__':
-    create_database()
+    # create_database()
     app.run()
     shop.close()
