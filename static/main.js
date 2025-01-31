@@ -1,3 +1,6 @@
+document.querySelector("button.basket").addEventListener('click',()=>{
+    window.location.href = '/basket'
+})
 $(document).ready(function () {
     $('.logout').click(function () {
         $.ajax({

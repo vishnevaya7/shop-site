@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .card {
+            border: black 1px solid;
+            list-style: none;
+            text-decoration: none;
+            display: grid;
+            grid-template:   150px/ auto 1fr 100px;
+            grid-gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .card_image {
+            height: 150px
+        }
+
+        ol {
+            padding: 0px;
+        }
+
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+<h2>Корзина {{ username }}</h2>
+<ol>
+    {% for product in products %}
+        <li class="card">
+            <div>
+                <image class="card_image" src="{{ product.get('url') }}"
+                       alt="{{ product.get('product_name') }}"></image>
+            </div>
+            <div>
+                <p><b>Продукт: </b>{{ product.get('product_name') }}</p>
+                <p><b>Количество: </b>{{ product.get('quantity') }}</p>
+                <p><b>Цена: </b>{{ product.get('price')*product.get('quantity') }} рублей</p>
+            </div>
+            <button product_id="{{ product.get('id') }}">Удалить</button>
+        </li>
+
+    {% endfor %}
+</ol>
+<button onclick="order()">Оформить заказ</button>
+<script>
+    document.querySelectorAll('button').forEach(button => {
+        button.addEventListener('click', deleteFromBasket)
+    })
+
+    function deleteFromBasket(event) {
+        let product_id = event.target.getAttribute('product_id');
+        $.ajax({
+            url: `/api/basket/${product_id}`,
+            type: 'DELETE',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                product_id: product_id,
+            }),
+            success: function (response) {
+                window.location.href = '/basket';
+            },
+            error: function (xhr, status, error) {
+                console.error('Add to basket failed:', error);
+            }
+        });
+    }
+
+    function order() {
+        $.ajax({
+            url: `/api/order`,
+            type: 'GET',
+            success: function (response) {
+                window.location.href = '/basket';
+            },
+            error: function (xhr, status, error) {
+                console.error('ORder failed:', error);
+            }
+        });
+    }
+</script>
+</body>
+</html>

@@ -3,9 +3,11 @@ from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity, creat
     unset_jwt_cookies
 
 from shop_service import Store, create_database
+from user_service import UserService
 
 app = Flask(__name__)
 shop = Store()
+user_service = UserService()
 app.config['SECRET_KEY'] = 'your-super-secret-key'
 app.config['JWT_SECRET_KEY'] = 'your-jwt-secret-key'
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']
@@ -22,12 +24,12 @@ class User(object):
 
 @app.route('/login', methods=['POST'])
 def login():
-    print(request.json)
     username = request.json.get('username', None)
     password = request.json.get('password', None)
-    print(username , password)
-    if username == 'admin' and password == 'admin':
-        access_token = create_access_token(identity=username)
+    user = user_service.get_user(username)
+    print('user = ', user)
+    if user.get('id') is not None:
+        access_token = create_access_token(identity=user.get('username'))
         resp = make_response(redirect("/"))
         set_access_cookies(resp, access_token)
         return resp
@@ -56,6 +58,35 @@ def get_products():
         group_id = None
     return shop.get_all_products(group_id)
 
+
+@app.route('/basket', methods=['GET'])
+@jwt_required()
+def basket():
+    username = get_jwt_identity()
+    products = shop.get_products_in_basket(username)
+    print(products)
+    return render_template('basket.html',username=username, products=products)
+
+
+
+@app.route('/basket', methods=['POST'])
+@jwt_required()
+def add_to_basket():
+    username = get_jwt_identity()
+    print(request.json)
+    product_id = request.json.get('product_id', None)
+    print(product_id)
+    count = request.json.get('count', 1)
+    print(count)
+    shop.add_into_basket(username, product_id, count=count)
+    return "OK"
+
+@app.route('/api/basket/<id>', methods=['DELETE'])
+@jwt_required()
+def delete_product_from_basket(id):
+    username = get_jwt_identity()
+    shop.delete_product_from_basket(id,username)
+    return "true"
 @app.route('/', methods=['GET'])
 @jwt_required()
 def index():
@@ -110,6 +141,17 @@ def update_product(id):
     req = request.json
     shop.update_product(id, req.get('name',None), req.get('price',None), req.get('quantity',None))
     return "true"
+
+@app.route('/api/order', methods=['GET'])
+@jwt_required()
+def get_order():
+    username = get_jwt_identity()
+    shop.get_order(username)
+    return "true"
+
+
+
+
 
 if __name__ == '__main__':
     # create_database()

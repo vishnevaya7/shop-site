@@ -23,7 +23,7 @@
     </div>
     <div>
         <button class="login" style="display: none">Войти</button>
-{#        <button class="basket">Корзина</button>#}
+        {#        <button class="basket">Корзина</button>#}
         <button class="logout">Выход</button>
     </div>
 </header>
@@ -44,7 +44,7 @@
     <div class="buy_info">
         <h2 class="product_name">{{ product.get('product_name') }}</h2>
         <p class="product_price"> Цена {{ product.get('price') }} рублей</p>
-        <button>Добавить в корзину</button>
+        <button onclick="addToBasket()">Добавить в корзину</button>
         <button onclick="decreaseQuantity()">-</button>
         <input type="number" value="1" min="1" max="{{ product.get('quantity') }}">
         <button onclick="increaseQuantity()">+</button>
@@ -74,6 +74,24 @@
     document.querySelector(".shop__info").addEventListener('click', () => {
         window.location.href = '/'
     })
+
+    function addToBasket() {
+        $.ajax({
+            url: '/basket',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                product_id: {{ product.get('id') }},
+                count: document.querySelector("body > section > div > input[type=number]").value
+            }),
+            success: function (response) {
+                window.location.href = '/';
+            },
+            error: function (xhr, status, error) {
+                console.error('Add to basket failed:', error);
+            }
+        });
+    }
 
 </script>
 </body>
