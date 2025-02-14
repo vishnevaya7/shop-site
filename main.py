@@ -26,7 +26,7 @@ class User(object):
 def login():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
-    user = user_service.get_user(username)
+    user = user_service.get_user(username,password)
     print('user = ', user)
     if user.get('id') is not None:
         access_token = create_access_token(identity=user.get('username'))
@@ -65,7 +65,13 @@ def basket():
     username = get_jwt_identity()
     products = shop.get_products_in_basket(username)
     print(products)
-    return render_template('basket.html',username=username, products=products)
+    sum_total_price = 0
+    for product in products:
+        total_price = product.get('price') * product.get('quantity')
+        product['total_price'] = f"{total_price:,}"
+        sum_total_price += total_price
+    sum_total_price = f"{sum_total_price:,}"
+    return render_template('basket.html',username=username, products=products,sum_total_price=sum_total_price)
 
 
 

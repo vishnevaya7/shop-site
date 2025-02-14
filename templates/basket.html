@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Корзина</title>
     <style>
         .card {
             border: black 1px solid;
@@ -37,13 +37,15 @@
             <div>
                 <p><b>Продукт: </b>{{ product.get('product_name') }}</p>
                 <p><b>Количество: </b>{{ product.get('quantity') }}</p>
-                <p><b>Цена: </b>{{ product.get('price')*product.get('quantity') }} рублей</p>
+                <p><b>Цена: </b>{{ product.get('total_price') }} рублей</p>
+
             </div>
             <button product_id="{{ product.get('id') }}">Удалить</button>
         </li>
 
     {% endfor %}
 </ol>
+<p>Полная стоимость заказа: {{ sum_total_price }} рублей </p>
 <button onclick="order()">Оформить заказ</button>
 <script>
     document.querySelectorAll('button').forEach(button => {
@@ -76,7 +78,7 @@
                 window.location.href = '/basket';
             },
             error: function (xhr, status, error) {
-                console.error('ORder failed:', error);
+                console.error('Order failed:', error);
             }
         });
     }

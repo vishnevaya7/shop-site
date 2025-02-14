@@ -7,12 +7,20 @@ class UserService:
         self.conn.row_factory = lambda c, r: dict(zip([col[0] for col in c.description], r))
         self.cursor = self.conn.cursor()
 
-    def add_user(self, username,password):
-        self.cursor.execute('insert into user (username,password) values ( ?, ?)',(username, password))
+    def add_user(self, username, password):
+        self.cursor.execute('insert into user (username,password) values ( ?, ?)',
+                            (username, password))
         self.conn.commit()
 
-    def get_user(self, username):
-        self.cursor.execute('select id, username,password from user where username = ?', (username,))
+    def get_user(self, username, password=None):
+        if password is None:
+            self.cursor.execute('select id, username,password from user where username = ?', (username,))
+            user = self.cursor.fetchone()
+            self.conn.commit()
+            return user
+
+        self.cursor.execute('select id, username,password from user where username = ? and password = ?',
+                            (username, password))
         user = self.cursor.fetchone()
         self.conn.commit()
         return user
