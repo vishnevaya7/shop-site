@@ -1,8 +1,6 @@
-document.querySelector("button.basket").addEventListener('click',()=>{
-    window.location.href = '/basket'
-})
+
 $(document).ready(function () {
-    $('.logout').click(function () {
+    $('#logout').click(function () {
         $.ajax({
             url: '/logout',
             type: 'GET',
@@ -17,17 +15,16 @@ $(document).ready(function () {
 });
 
 $.ajaxSetup({async: false});
+
 $.ajax({
     url: '/api/products?group_id=' + localStorage.getItem('group_id'),
     method: 'get',
     dataType: 'json',
     success: function (data) {
-        // console.log(data); //data.json
         listOfItems = data
     }
 });
 
-console.log(listOfItems) //listOfItems
 
 const maxCardInLine = 10000
 
@@ -38,8 +35,7 @@ const rowCount = Math.ceil(listOfItems.length / maxCardInLine)
 
 for (let i = 0; i < rowCount; i = i + 1) {
 
-    let cardRow = document.createElement('div');
-    cardRow.classList.add('card__row');
+    const shop_window = document.querySelector(".main_section")
 
     // and == && , or = ||
     for (let j = 0, index = i * maxCardInLine; j < maxCardInLine && index < listOfItems.length; j = j + 1, index = i * maxCardInLine + j) {
@@ -48,7 +44,7 @@ for (let i = 0; i < rowCount; i = i + 1) {
 
         let card = document.createElement('div');
         card.classList.add('card');
-        cardRow.appendChild(card);
+        shop_window.appendChild(card);
 
         let img = document.createElement('img');
         img.src = el.url;
@@ -65,6 +61,4 @@ for (let i = 0; i < rowCount; i = i + 1) {
         });
     }
 
-
-    document.querySelector(".main_section").appendChild(cardRow);
 }

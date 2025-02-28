@@ -9,9 +9,80 @@ header {
 }
 main {
 }
+.card {
+    border: 1px solid #e0e0e0; /* Граница карточки */
+    border-radius: 12px; /* Скругленные углы */
+    overflow: hidden; /* Обрезаем содержимое, чтобы не выходило за границы */
+    background: #fff; /* Белый фон */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Тень */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Плавные переходы */
+    width: 400px;
+}
+
 .card:hover {
     cursor: pointer;
-    background-color: aliceblue;
+    transform: translateY(-5px); /* Поднимаем карточку при наведении */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Увеличиваем тень */
+}
+.card img {
+    width: 100%; /* Растягиваем на всю ширину карточки */
+    height: 100%; /* Фиксированная высота */
+    object-fit: cover; /* Обрезаем изображение, чтобы оно заполняло область */
+    transition: transform 0.3s ease; /* Плавное увеличение */
+}
+
+.card:hover img {
+    transform: scale(1.05); /* Увеличиваем изображение при наведении */
+}
+.card h3 {
+    font-size: 1.25rem; /* Размер заголовка */
+    margin: 16px 16px 8px; /* Отступы */
+    color: #333; /* Цвет текста */
+}
+
+.card p {
+    font-size: 0.9rem; /* Размер текста */
+    margin: 0 16px 16px; /* Отступы */
+    color: #666; /* Цвет текста */
+}
+.card button {
+    display: block; /* Делаем кнопку блочным элементом */
+    width: calc(100% - 32px); /* Ширина кнопки с учетом отступов */
+    margin: 0 16px 16px; /* Отступы */
+    padding: 10px; /* Внутренние отступы */
+    background: #007bff; /* Цвет фона */
+    color: #fff; /* Цвет текста */
+    border: none; /* Убираем границу */
+    border-radius: 8px; /* Скругленные углы */
+    cursor: pointer; /* Курсор-указатель */
+    transition: background 0.3s ease; /* Плавное изменение фона */
+}
+
+.card button:hover {
+    background: #0056b3; /* Изменение цвета при наведении */
+}
+.card {
+    position: relative; /* Для позиционирования иконок */
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.1)); /* Градиент */
+    pointer-events: none; /* Чтобы не блокировал клики */
+}
+
+.card .icon {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
 }
 footer {
     height: 100px;
@@ -33,35 +104,6 @@ body, ul {
     margin: 10px;
 }
 
-
-.card {
-    height: 380px;
-    width: 260px;
-    border: 1px solid black;
-    margin: 10px;
-    border-radius: 10px;
-    overflow: hidden;
-    object-fit: cover;
-}
-.card img {
-    object-fit: cover;
-}
-
-
-.card__row{
-    flex-wrap: wrap;
-    width: 70%;
-    margin: auto;
-    display: flex;
-    justify-content: center;
-}
-
-
-.card img {
- width: 100%;
- height: 200px;
- 
-}
 .product_section{
     margin-top: 20px;
     width: 70%;
@@ -86,6 +128,10 @@ body, ul {
 .item-description{
     font-size: 23px;
 }
+.item-description-quantity{
+    margin-top: 10px;
+}
+
 .shop__info:hover {
     cursor: pointer;
 }
@@ -93,4 +139,13 @@ body, ul {
     border: 1px solid black;
     border-radius: 5px;
     width: 100%;
+}
+.main_section {
+    margin-block: 50px;
+    width: 66%;
+    margin-inline: auto;
+    display: flex;
+    gap: 50px;
+    flex-wrap: wrap;
+    justify-content: center;
 }

@@ -1,8 +1,8 @@
-from flask import Flask, request, render_template, jsonify, redirect, url_for, session, make_response
+from flask import Flask, request, render_template, jsonify, redirect, url_for, make_response
 from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity, create_access_token, set_access_cookies, \
     unset_jwt_cookies
 
-from shop_service import Store, create_database
+from shop_service import Store
 from user_service import UserService
 
 app = Flask(__name__)
@@ -22,19 +22,22 @@ class User(object):
     def __str__(self):
         return "User(id='%s')" % self.id
 
+
 @app.route('/login', methods=['POST'])
 def login():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
-    user = user_service.get_user(username,password)
+    user = user_service.get_user(username, password)
     print('user = ', user)
+
     if user.get('id') is not None:
         access_token = create_access_token(identity=user.get('username'))
-        resp = make_response(redirect("/"))
+        resp = make_response(jsonify({"message": "Login successful"}), 200)
+        resp.mimetype = 'application/json'
         set_access_cookies(resp, access_token)
         return resp
     else:
-        return 'Invalid username or password', 401
+        return jsonify({"message": "Invalid username or password"}), 401
 @app.route('/protected', methods=['GET'])
 @jwt_required()
 def protected():
@@ -62,6 +65,8 @@ def get_products():
 @app.route('/basket', methods=['GET'])
 @jwt_required()
 def basket():
+    groups = shop.get_all_groups()
+
     username = get_jwt_identity()
     products = shop.get_products_in_basket(username)
     print(products)
@@ -71,7 +76,7 @@ def basket():
         product['total_price'] = f"{total_price:,}"
         sum_total_price += total_price
     sum_total_price = f"{sum_total_price:,}"
-    return render_template('basket.html',username=username, products=products,sum_total_price=sum_total_price)
+    return render_template('basket.html',username=username, products=products,sum_total_price=sum_total_price,groups=groups)
 
 
 
@@ -115,13 +120,14 @@ def expired_token_callback(jwt_header, jwt_data):
 
 @app.route('/product/<id>', methods=['GET'])
 def product(id):
+    groups = shop.get_all_groups()
     product = shop.get_product(id)
     if product.get('description') is not None:
         product['description'] = product.get('description').split('\n')
     else:
         product['description'] = []
     print(product)
-    return render_template('product.html',product=product)
+    return render_template('product.html',product=product,groups=groups)
 
 
 @app.route('/api/products/<id>', methods=['DELETE'])
